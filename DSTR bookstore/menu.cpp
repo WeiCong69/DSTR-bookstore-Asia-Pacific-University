@@ -5,7 +5,6 @@
 using namespace std;
 using namespace book;
 
-//test
 Book* book1 = new Book;
 int getMenuChoice(int value)
 {
