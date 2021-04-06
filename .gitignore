@@ -4,7 +4,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 DSTR bookstore/DSTR bookstore.vcxproj
 DSTR bookstore/DSTR bookstore.vcxproj.filters
-DSTR bookstore/menu.cpp
 DSTR bookstore.sln
 
 # User-specific files
