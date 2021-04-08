@@ -25,7 +25,10 @@ namespace book {
         void setQuantity(int quantity);
         std::string getCategory();
         void setCategory(std::string category);
-        std::string displayBook();
+        std::string displayBook(int style);
+        void editBook();
+        Book* searchBook(int id);
+        void deleteBook();
     };
 }
 #endif 

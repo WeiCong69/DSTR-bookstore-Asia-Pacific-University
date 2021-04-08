@@ -54,7 +54,8 @@ void performAction(int choice)
         book1->displayRecord();
     }break;
     case 2:{
-        cout << "2";
+        //cout << "2";
+        book1->editBook();
     }break;
     case 3:{
         cout << "3";
