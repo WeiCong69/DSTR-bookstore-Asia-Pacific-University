@@ -15,6 +15,17 @@ namespace book {
         std::string convertCategory(int);
         void addBook();
         void displayRecord();
+        bool checkDuplicateID(int id);
+        int randomID();
+        int getBookID();
+        void setBookID(int bookID);
+        std::string getName();
+        void setName(std::string name);
+        int getQuantity();
+        void setQuantity(int quantity);
+        std::string getCategory();
+        void setCategory(std::string category);
+        std::string displayBook();
     };
 }
 #endif 

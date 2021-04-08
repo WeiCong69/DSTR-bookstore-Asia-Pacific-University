@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstdlib>
 #include "book.h"
 using namespace std;
 using namespace book;
@@ -8,6 +9,41 @@ using namespace book;
 
 Book* head = NULL;
 //Book(int a, int  b, string c,string d) : bookID(a), quantity(b), name(c),category(d){}
+int Book::getBookID() {
+    return this->bookID;
+}
+
+void Book::setBookID(int bookID) {
+    this->bookID = bookID;
+}
+
+string Book::getName() {
+    return this->name;
+}
+
+void Book::setName(string name) {
+    this->name = name;
+}
+
+int Book::getQuantity() {
+    return this->quantity;
+}
+
+void Book::setQuantity(int quantity) {
+    this->quantity = quantity;
+}
+
+string Book::getCategory() {
+    return this->category;
+}
+
+void Book::setCategory(string category) {
+    this->category = category;
+}
+
+string Book::displayBook() {
+    return to_string(getBookID()) + "\t" + getName() + "\t" + getCategory() + "\t" + to_string(getQuantity())+ "\n";
+}
 
 void Book::printCategory() {
     cout << "1. Fiction" << endl;
@@ -37,12 +73,20 @@ string Book:: convertCategory(int selection) {
 void Book::addBook() {
     int category, quantity;
     string name;
+    bool duplicate = false;
     struct Book* newBook = new Book;
-    cout << "Enter Book ID" << endl;
-    cin >> newBook->bookID;
-    cin.get();
+    //cout << "Enter Book ID" << endl;
+
     //temp pointer to check if theres duplicated ID
-    struct Book* checkID;
+    do {
+        
+        //cin >> newBook->bookID;
+        //cin.get();
+        newBook->bookID = randomID();
+        duplicate = checkDuplicateID(newBook->bookID);
+
+    } while (duplicate);
+    /*struct Book* checkID;
     checkID = head;
     while (checkID != NULL)
     {
@@ -56,18 +100,18 @@ void Book::addBook() {
         {
             checkID = checkID->next;
         }
-    }
+    }*/
     //Name
     cout << "Please enter the name of new book:\n";
     //cin >> name;
-    
+    getline(cin, name);
     getline(cin, name);
     newBook->name = name;
 
     // Category
     Book::printCategory();
     cin >> category;
-    while (category < 0 || category>4 || cin.fail())
+    while (category < 0 || category>3 || cin.fail())
     {
         if (cin.fail())
         {
@@ -105,19 +149,47 @@ void Book:: displayRecord() {
     current = head;
     if (current == NULL) {
         cout << "No records found";
-    }
-    if (current != NULL) {
+    }else {
         cout << "Book ID \tName \tCategory \t Quantity\n";
         while (current != NULL) {
-            cout << "" << current->bookID << "\t\t" << current->name << "\t" << current->category << "\t\t" << current->quantity << endl;
+            //cout << "" << current->bookID << "\t" << current->name << "\t" << current->category << "\t" << current->quantity << endl;
+            //cout << "" << current->getBookID() << "\t" << current->getName() << "\t" << current->getCategory() << "\t" << current->getQuantity() << endl;
+            cout<<current->displayBook();
             current = current->next;
-
         }
 
     }
 }
 
-/*int main() {
-    addBook();
-    displayRecord();
-}*/
+bool Book::checkDuplicateID(int id) {
+    bool found = false;
+    Book * node = head;
+    if (node == NULL) {
+        return false;
+    }
+    else {
+        do {
+            if (node->bookID == id) {
+                cout << "DUPLICATE ID FOUND !" << endl;
+                return true;
+            }
+            node = node->next;
+
+        } while (node != NULL);
+
+        return false;
+    }
+}
+
+int Book::randomID() {
+    int id = rand();
+    return id;
+}
+
+//void Book::editBook() {
+//    //display all books
+//    Book::displayRecord();
+//    //choose a book by ID
+//    //ask user which part to update
+//    //
+//}
