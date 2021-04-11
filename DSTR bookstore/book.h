@@ -29,6 +29,8 @@ namespace book {
         void editBook();
         Book* searchBook(int id);
         void deleteBook();
+        void push(Book** head_ref, std::string name, std::string category, int quantity);
+        void filterCategory();
     };
 }
 #endif 
