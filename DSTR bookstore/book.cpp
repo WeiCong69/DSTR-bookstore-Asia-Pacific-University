@@ -85,39 +85,19 @@ void Book::addBook() {
     string name;
     bool duplicate = false;
     struct Book* newBook = new Book;
-    //cout << "Enter Book ID" << endl;
-
-    //temp pointer to check if theres duplicated ID
+    // Auto generate unique bookID. 1 is not allowed to be used as the bookID because 1 is special command to exit menu
     do {
-        
-        //cin >> newBook->bookID;
-        //cin.get();
-        newBook->bookID = randomID();
-        if (newBook->bookID == 1) { continue; }
-        duplicate = checkDuplicateID(newBook->bookID);
-
+        newBook->setBookID(randomID());
+        if (newBook->getBookID() == 1) { continue; }
+        duplicate = checkDuplicateID(newBook->getBookID());
     } while (duplicate);
-    /*struct Book* checkID;
-    checkID = head;
-    while (checkID != NULL)
-    {
-        if (newBook->bookID == checkID->bookID)
-        {
-            cout << "Duplicate Book ID! Re-enter book ID:";
-            cin >> newBook->bookID;
-            checkID = NULL; //to break the loop
-        }
-        else
-        {
-            checkID = checkID->next;
-        }
-    }*/
+
     //Name
     cout << "Please enter the name of new book:\n";
     //cin >> name;
     getline(cin, name);
     getline(cin, name);
-    newBook->name = name;
+    newBook->setName(name);
 
     // Category
     Book::printCategory();
@@ -133,7 +113,8 @@ void Book::addBook() {
         cout << "Please choose the category from the range of 1-3 \n";
         cin >> category;
     }
-    newBook->category = convertCategory(category);
+    name = convertCategory(category);
+    newBook->setCategory(name);
 
     //Quantity
     cout << "Please enter new quantity" << endl;
@@ -148,7 +129,7 @@ void Book::addBook() {
         cout << "Please enter a positive number\n";
         cin >> quantity;
     }
-    newBook->quantity = quantity;
+    newBook->setQuantity(quantity);
 
     newBook->next = head;
     head = newBook;
@@ -180,7 +161,7 @@ bool Book::checkDuplicateID(int id) {
     }
     else {
         do {
-            if (node->bookID == id) {
+            if (node->getBookID() == id) {
                 cout << "DUPLICATE ID FOUND !" << endl;
                 return true;
             }
@@ -230,8 +211,9 @@ void Book::editBook() {
                 cin.ignore();
                 continue;
             }
+            // If user keys in 1 then user exits edit book menu
             if (choice == 1) { break; }
-
+            // system finds the book based on the id given by user
             tempBook = searchBook(choice);
             if (tempBook== NULL) {
                 cout << "Book not found! Please enter another Book ID\n";
@@ -243,6 +225,7 @@ void Book::editBook() {
             }
         }
         if (counter == 1) {
+            //System shows book selected by user.
             cout<<tempBook->displayBook(2);
             cout << "1. Update BookName\n2.Update Category\n3.Update Quantity\n4. Exit updating book\n";
             cin >> update;
@@ -309,13 +292,16 @@ void Book::editBook() {
     } while (counter < 2);
 }
 
+
 void Book::deleteBook() {
+    push(&head, "Hulu Langat", "Fiction", 4);
+    push(&head, "Hang Tuah", "Fiction", 5);
     Book* tempBook = new Book;
     int choice, update, intVal, counter = 0;
     string stringValue;
     if (head == NULL) {
         cout << "**********\n No books found in the system. Please add new books \n**********\n";
-        break;
+        return;
     }
     do {
         if (counter == 0) {
@@ -349,10 +335,28 @@ void Book::deleteBook() {
             }
             switch (update) {
             case 1: {
-                Book * a = head;
-                Book * b = head->next;
-                if (b = NULL) {
-
+            //if book==head then make head->next the new head;
+                if (tempBook == head) {
+                    if (tempBook->next != NULL) {
+                        head = head->next;
+                        free(tempBook);
+                    }
+                    else {
+                        head = NULL;
+                        free(tempBook);
+                    }
+                }else {
+                //Assume the book u wanna delete is B, the book previous of it is A and the book after it is C
+                //Now we find A and connect A->next to C. Then we delete B
+                    Book* prevBook = head;
+                    while (prevBook->next != NULL && prevBook->next != tempBook) {
+                        prevBook = prevBook->next;
+                    }
+                    if (prevBook->next == NULL) {
+                        cout << "\nGiven node is not present in Linked List";
+                    }
+                    prevBook->next = prevBook->next->next;
+                    free(tempBook);
                 }
 
             } break;
@@ -363,9 +367,10 @@ void Book::deleteBook() {
             default:
                 continue;
             }
-            cout << "Update successfully. Do you wish to continue updating current book?\n1.Yes\n2. No\n";
+            cout << "Update successfully. Do you wish to delete another book?\n1.Yes\n2. No\n";
             cin >> intVal;
             if (intVal == 1) {
+                counter--;
                 continue;
             }
             else {
@@ -373,4 +378,79 @@ void Book::deleteBook() {
             }
         }
     } while (counter < 2);
+}
+
+void Book::push(Book** head_ref, string name, string category, int quantity){
+    bool duplicate = false;
+    Book* new_node = new Book;
+    do {
+
+        new_node->setBookID(randomID());
+        if (new_node->getBookID() == 1) { continue; }
+        duplicate = checkDuplicateID(new_node->getBookID());
+
+    } while (duplicate);
+
+    new_node->setName(name);
+    new_node->setCategory(category);
+    new_node->setQuantity(quantity);
+    new_node->next = *head_ref;
+    *head_ref = new_node;
+}
+
+void Book::filterCategory() {
+    push(&head, "Hulu Langat1", "Graphics", 4);
+    push(&head, "Hang Tuah2", "Fiction", 5);
+    push(&head, "Hulu Langat3", "Graphics", 4);
+    push(&head, "Hang Tuah4", "Non-Fiction", 5);
+    int counter = 0,choice;
+    string category;
+    do {
+        if (counter == 0) {
+            cout << "Filtering books by category\n**************\n";
+            printCategory();
+            cin >> choice;
+            while (choice < 0 || choice>3 || cin.fail())
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore();
+                }
+                cout << "Invalid input\n";
+                cout << "Please choose the category from the range of 1-3\n ";
+                cin >> choice;
+            }
+            counter++;
+        }
+        if (counter == 1) {
+            category = Book::convertCategory(choice);
+            cout << category << endl;
+            struct Book* current;
+            current = head;
+            if (current == NULL) {
+                cout << "No records found";
+            }
+            else {
+                cout << "Book ID \tName \tCategory \t Quantity\n";
+                while (current != NULL) {
+                    if (current->getCategory() == category) {
+                        cout << current->displayBook(1);
+                    }
+                    current = current->next;
+                }
+
+            }
+            cout << "Do you wish to view another category?\n1.Yes\n2.No\n";
+            cin >> choice;
+            if (choice == 1) {
+                counter--;
+            }
+            else {
+                counter++;
+                break;
+            }
+        }
+    } while (counter < 2);
+
 }

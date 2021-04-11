@@ -44,6 +44,7 @@ void printMenu()
 
 void performAction(int choice)
 {
+
     switch (choice)
     {
     case 0:
@@ -58,10 +59,10 @@ void performAction(int choice)
         book1->editBook();
     }break;
     case 3:{
-        cout << "3";
+        book1->deleteBook();
     }break;
     case 4:{
-        cout << "4";
+        book1->filterCategory();
     }break;
     case 5:{
         cout << "5";
