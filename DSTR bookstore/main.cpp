@@ -34,5 +34,6 @@ int main()
         }
         performAction(selection);
         //diu lei
+        //lou mou
     }
 }
