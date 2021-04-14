@@ -23,6 +23,7 @@ int main()
         //If user chooses a number outside the range(1-9)
         if (selection > 9 || selection < 1)
         {
+            //test fetch in visual studio
             cout << "Choice Outside the range.Please select 1-9" << endl;
             continue;
         }
