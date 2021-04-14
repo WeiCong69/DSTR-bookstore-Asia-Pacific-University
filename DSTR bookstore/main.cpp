@@ -21,7 +21,7 @@ int main()
             continue;
         }
         //If user chooses a number outside the range(1-9)
-        if (selection >= 9 || selection < 1)
+        if (selection > 9 || selection < 1)
         {
             cout << "Choice Outside the range.Please select 1-9" << endl;
             continue;

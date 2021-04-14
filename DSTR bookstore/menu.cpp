@@ -96,6 +96,7 @@ void performAction(int choice)
     }break;
     case 9: {
         cout << "9";
+        break;
     }
         break;
     default:
