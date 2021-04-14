@@ -142,10 +142,12 @@
     <ClCompile Include="book.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="transaction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="book.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="transaction.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
