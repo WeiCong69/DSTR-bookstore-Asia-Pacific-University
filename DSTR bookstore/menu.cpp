@@ -6,6 +6,7 @@ using namespace std;
 using namespace book;
 
 Book* book1 = new Book;
+//Book* head2 = NULL;
 int getMenuChoice(int value)
 {
     int choice = -1;
@@ -65,7 +66,27 @@ void performAction(int choice)
         book1->filterCategory();
     }break;
     case 5:{
-        cout << "5";
+        //book1->push(&head2, "Hulu Langat1", "Graphics", 4);
+        //book1->push(&head2, "Hang Tuah2", "Fiction", 1);
+        //book1->push(&head2, "Hulu Langat3", "Graphics", 42);
+        //book1->MergeSort(&head2);
+        //struct Book* current;
+        //current = head2;
+        //if (current == NULL) {
+        //    cout << "No records found";
+        //}
+        //else {
+        //    cout << "Book ID \tName \tCategory \t Quantity\n";
+        //    while (current != NULL) {
+        //        //cout << "" << current->bookID << "\t" << current->name << "\t" << current->category << "\t" << current->quantity << endl;
+        //        //cout << "" << current->getBookID() << "\t" << current->getName() << "\t" << current->getCategory() << "\t" << current->getQuantity() << endl;
+        //        cout << current->displayBook(1);
+        //        current = current->next;
+        //    }
+
+        //}
+        book1->sortBook();
+
     }break;
     case 6: {
         cout << "6";
