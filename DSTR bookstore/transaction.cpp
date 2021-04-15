@@ -5,11 +5,13 @@
 #include "transaction.h"
 #include "book.h"
 
+
 using namespace std;
 using namespace transaction;
 using namespace book;
 
-Transaction* header = NULL;
+
+Transaction* head = NULL;
 Book* showBook = new Book;
 
 int Transaction::getTransactionID() {
@@ -87,8 +89,11 @@ void Transaction::addTransaction() {
 
     }
 
-    newTrans->next = header;
-    header = newTrans;
+
+
+    newTrans->next = head;
+    head = newTrans;
+
     //newBook->next = head;
     //head = newBook;
 
@@ -167,6 +172,10 @@ void Transaction::addtoCart(Transaction** head) {
                 counter++;
             }
 
+
+            return;
+
+
             return;
 
         }
@@ -175,11 +184,14 @@ void Transaction::addtoCart(Transaction** head) {
 
 }
 
+void Transaction::viewCart(Transaction** head) {
+    Book* cart = (*head)->getBoughtBooks();
+    cart->displayRecord(cart);
+}
 
 bool Transaction::checkDuplicateID(int id) {
     bool found = false;
-    Book* node = head;
-    Transaction* node = header;
+    Transaction* node = head;
     if (node == NULL) {
         return false;
     }
@@ -204,7 +216,8 @@ int Transaction::randomID() {
 
 void Transaction::displayRecord() {
     struct Transaction* current;
-    current = header;
+    current = head;
+
     if (current == NULL) {
         cout << "No records found";
     }
@@ -236,3 +249,4 @@ void Transaction::displayRecord() {
 
     
 }
+

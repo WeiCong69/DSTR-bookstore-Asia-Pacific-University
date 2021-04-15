@@ -2,10 +2,14 @@
 #include <ctype.h>
 #include "menu.h"
 #include "book.h"
+#include "transaction.h"
 using namespace std;
 using namespace book;
+using namespace transaction;
+
 
 Book* book1 = new Book;
+Transaction* transaction1 = new Transaction;
 //Book* head2 = NULL;
 int getMenuChoice(int value)
 {
@@ -53,7 +57,7 @@ void performAction(int choice)
         break;
     case 1: {        
         book1->addBook();
-        book1->displayRecord();
+        book1->displayRecord(NULL);
     }break;
     case 2:{
         //cout << "2";
@@ -66,30 +70,12 @@ void performAction(int choice)
         book1->filterCategory();
     }break;
     case 5:{
-        //book1->push(&head2, "Hulu Langat1", "Graphics", 4);
-        //book1->push(&head2, "Hang Tuah2", "Fiction", 1);
-        //book1->push(&head2, "Hulu Langat3", "Graphics", 42);
-        //book1->MergeSort(&head2);
-        //struct Book* current;
-        //current = head2;
-        //if (current == NULL) {
-        //    cout << "No records found";
-        //}
-        //else {
-        //    cout << "Book ID \tName \tCategory \t Quantity\n";
-        //    while (current != NULL) {
-        //        //cout << "" << current->bookID << "\t" << current->name << "\t" << current->category << "\t" << current->quantity << endl;
-        //        //cout << "" << current->getBookID() << "\t" << current->getName() << "\t" << current->getCategory() << "\t" << current->getQuantity() << endl;
-        //        cout << current->displayBook(1);
-        //        current = current->next;
-        //    }
-
-        //}
         book1->sortBook();
-
     }break;
     case 6: {
-        cout << "6";
+        transaction1->addTransaction();
+        //transaction1->addTransaction();
+        //transaction1->displayRecord();
     }break;
     case 7: {
         cout << "8";
