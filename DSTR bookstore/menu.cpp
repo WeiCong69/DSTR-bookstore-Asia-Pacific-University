@@ -78,7 +78,7 @@ void performAction(int choice)
         //transaction1->displayRecord();
     }break;
     case 7: {
-        cout << "8";
+        transaction1->displayRecord();
     }break;
     case 9: {
         cout << "9";

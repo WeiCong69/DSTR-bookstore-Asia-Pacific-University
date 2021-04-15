@@ -41,6 +41,7 @@ namespace book {
         Book* RevSortedMerge(Book* a, Book* b, int choice);
         void sortBook();
         float roundoff(float value, unsigned char prec);
+        void updateQuantity(Book* cart);
 
     };
 }

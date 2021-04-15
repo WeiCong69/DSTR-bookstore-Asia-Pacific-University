@@ -11,7 +11,7 @@ using namespace transaction;
 using namespace book;
 
 
-Transaction* head = NULL;
+Transaction* transactionHead = NULL;
 Book* showBook = new Book;
 
 int Transaction::getTransactionID() {
@@ -30,11 +30,6 @@ void Transaction::setTotalPrice(float totalPrice) {
     this->totalPrice = totalPrice;
 }
 
-float Transaction::roundoff(float value, unsigned char prec)
-{
-    float pow_10 = pow(10.0f, (float)prec);
-    return round(value * pow_10) / pow_10;
-}
 
 
 Book* Transaction::getBoughtBooks() {
@@ -46,19 +41,27 @@ void Transaction::setBoughtBooks(int id, string name, string category, int quant
     test->push(&this->boughtBooks, id, name, category, quantity, price);
 }
 
+void Transaction::resetBoughtBooks() {
+    this->boughtBooks = NULL;
+    //this->boughtBooks->next = NULL;
+}
+
 
 void Transaction::addTransaction() {
     Transaction* newTrans = new Transaction;
-    bool duplicate = false, exit = true;
+
+    viewCart(&newTrans);
+    bool duplicate = false,exit=true;
     int choice;
-    //newTrans->setBoughtBooks("Hulu Langat", "Fiction", 4, 4.00);
-    //newTrans->setBoughtBooks("Hang Tuah", "Fiction", 5, 5.00);
+    newTrans->setBoughtBooks(67,"Hulu Langat", "Fiction", 4, 4.00);
+    newTrans->setBoughtBooks(34,"Hang Tuah", "Fiction", 5, 5.00);
     //Transaction ID
     do {
         newTrans->setTransactionID(randomID());
         if (newTrans->getTransactionID() == 1) { continue; }
         duplicate = checkDuplicateID(newTrans->getTransactionID());
     } while (duplicate);
+    
     while (exit) {
         cout << "Please select an action\n1. Add books to cart\n2.Remove books from cart\n3.View cart\n4.Checkout Cart\n5.Cancel Transaction\n";
         cin >> choice;
@@ -70,18 +73,34 @@ void Transaction::addTransaction() {
                 cin.ignore();
             }
             cout << "Invalid input\n";
-            cout << "Please choose the choice from the range of 1-6 \n";
+            cout << "Please choose the choice from the range of 1-5 \n";
             cin >> choice;
         }
 
         switch (choice) {
         case 1:
-            cout << "test\n";
             addtoCart(&newTrans);
+            break;
+        case 2:
+            removeFromCart(&newTrans);
             break;
         case 3:
             viewCart(&newTrans);
             break;
+        case 4: {
+            if (newTrans->getBoughtBooks() == NULL) {
+                cout << "The order is empty, you cannot checkout.Please add on some books\n";
+               
+            }
+            else {
+                newTrans->setTotalPrice(calculateTotal(&newTrans));
+                //this function updates the stock after minusing the books in the cart
+                showBook->updateQuantity(newTrans->getBoughtBooks());
+                newTrans->next = transactionHead;
+                transactionHead = newTrans;
+                exit = false;
+            }
+        }break;
         case 5:
             exit = false;
             break;
@@ -89,13 +108,6 @@ void Transaction::addTransaction() {
 
     }
 
-
-
-    newTrans->next = head;
-    head = newTrans;
-
-    //newBook->next = head;
-    //head = newBook;
 
 }
 
@@ -135,12 +147,28 @@ void Transaction::addtoCart(Transaction** head) {
         }
         if (counter == 1) {
             cout << tempBook->displayBook(2);
-            cout << "Please enter a quantity of book u wish to buy.\n";
+            cout << "Please enter a quantity of book u wish to buy.\nEnter 0 to exit menu\n";
             cin >> quantity;
-            cout << quantity << endl;
+            while (cin.fail() && quantity < 0)
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore();
+                }
+                cout << "Invalid input\n";
+                cout << "Please key in the postive number for quantity\n";
+                cin >> quantity;
+            }
+            if (quantity == 0)break;
             if (quantity > tempBook->getQuantity()) {
                 cout << "Quantity more than stock available.Please re-enter a smaller number 1\n";
                 continue;
+            }
+            //If cart is empty, then add it without checking
+            if (cart == NULL) {
+                (*head)->setBoughtBooks(tempBook->getBookID(), tempBook->getName(), tempBook->getCategory(), quantity, tempBook->getPrice());
+                return;
             }
             //search for the choosen book  in the transaction cart
             bookInCart = bookInStock->searchBook(choice, cart);
@@ -181,17 +209,143 @@ void Transaction::addtoCart(Transaction** head) {
         }
     } while (counter < 2);
 
-
 }
-
-void Transaction::viewCart(Transaction** head) {
+void Transaction::removeFromCart(Transaction** head) {
+    int choice, quantity = 0, counter = 0;
+    Book* tempBook = new Book;
+    Book* bookInStock = new Book;
+    Book* bookInCart = new Book;
     Book* cart = (*head)->getBoughtBooks();
-    cart->displayRecord(cart);
+    do {
+        if (counter == 0) {
+            if (cart == NULL) {
+                cout << "No records found\n";
+                break;
+            }
+            cout << "Please select books to be removed\n";
+            bookInStock->displayRecord(cart);
+            cout << "\n Please select a book by keying in the book ID\n***Enter 1 to exit menu***\n ";
+            cin >> choice;
+            while (cin.fail() && choice < 0)
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore();
+                }
+                cout << "Invalid input\n";
+                cout << "Please key in the book ID\n";
+                cin >> choice;
+            }
+            // If user keys in 1 then user exits edit book menu
+            if (choice == 1) { return; }
+            // system finds the book based on the id given by user
+            tempBook = bookInStock->searchBook(choice, cart);
+            if (tempBook == NULL) {
+                cout << "Book not found! Please enter another Book ID\n";
+                continue;
+            }
+            counter++;
+        }
+        if (counter == 1) {
+            cout << tempBook->displayBook(2);
+            cout << "Please select an action.\n1.Remove book from cart\n2.Cancel\n";
+            cin >> quantity;
+            while (cin.fail() || quantity < 1 || quantity>2 )
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore();
+                }
+                cout << "Invalid input\n";
+                cout << "Please choose from range of 1-2\n";
+                cin >> quantity;
+            }
+            switch (quantity) {
+            case 1: {
+                //if book==head then make head->next the new head;
+                if (tempBook == cart) {
+                    if (tempBook->next != NULL) {
+                        cart = cart->next;
+                        cout << "1\n";
+                        free(tempBook);
+                    }
+                    else {
+                        (*head)->resetBoughtBooks();
+                        cout << "2\n";
+                        free(tempBook);
+                    }
+                }
+                else {
+                    cout << "3\n";
+                    //Assume the book u wanna delete is B, the book previous of it is A and the book after it is C
+                    //Now we find A and connect A->next to C. Then we delete B
+                    Book* prevBook = cart;
+                    while (prevBook->next != NULL && prevBook->next != tempBook) {
+                        prevBook = prevBook->next;
+                    }
+                    if (prevBook->next == NULL) {
+                        cout << "\nGiven node is not present in Linked List";
+                    }
+                    prevBook->next = prevBook->next->next;
+                    free(tempBook);
+                }
+
+
+            } break;
+            case 2:
+                counter = 69;
+                continue;
+                break;
+            default:
+                continue;
+            }
+            cout << "Update successfully. Do you wish to delete another book?\n1.Yes\n2. No\n";
+            cin >> quantity;
+            if (quantity == 1) {
+                counter--;
+                continue;
+            }
+            else {
+                counter++;
+            }
+
+
+            
+
+
+           
+
+        }
+    } while (counter < 2);
 }
 
+void Transaction::viewCart(Transaction** transactionHead) {
+    Book* cart = (*transactionHead)->getBoughtBooks();
+    if (cart == NULL) {
+        cout << "No records found"<<endl;
+    }
+    else {
+        cart->displayRecord(cart);
+    }
+    
+}
+
+float Transaction::calculateTotal(Transaction** head) {
+    Book* cart = (*head)->getBoughtBooks();
+    float total=0;
+    if (cart == NULL)return total;
+    while (cart != NULL) {
+        total += cart->getQuantity() * cart->getPrice();
+        cart = cart->next;
+    }
+    return total;
+
+}
 bool Transaction::checkDuplicateID(int id) {
     bool found = false;
-    Transaction* node = head;
+    Transaction* node = transactionHead;
     if (node == NULL) {
         return false;
     }
@@ -216,7 +370,7 @@ int Transaction::randomID() {
 
 void Transaction::displayRecord() {
     struct Transaction* current;
-    current = head;
+    current = transactionHead;
 
     if (current == NULL) {
         cout << "No records found";
