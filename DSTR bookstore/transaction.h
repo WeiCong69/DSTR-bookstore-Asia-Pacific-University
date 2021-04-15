@@ -19,14 +19,17 @@ namespace transaction {
         float getTotalPrice();
         void setTotalPrice(float totalPrice);
         Book* getBoughtBooks();
+        void resetBoughtBooks();
         void setBoughtBooks(int id, std::string name, std::string category, int quantity, float price);
-        float roundoff(float value, unsigned char prec);
         void addTransaction();
         bool checkDuplicateID(int id);
         int randomID();
         void displayRecord();
         void addtoCart(Transaction** head);
+        void removeFromCart(Transaction** head);
         void viewCart(Transaction** head);
+        float calculateTotal(Transaction** head);
+
 
 
   
