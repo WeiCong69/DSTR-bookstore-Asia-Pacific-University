@@ -55,21 +55,21 @@ void performAction(int choice)
     case 0:
         cout << "0";
         break;
-    case 1: {        
+    case 1: {
         book1->addBook();
         book1->displayRecord(NULL);
     }break;
-    case 2:{
+    case 2: {
         //cout << "2";
         book1->editBook();
     }break;
-    case 3:{
+    case 3: {
         book1->deleteBook();
     }break;
-    case 4:{
+    case 4: {
         book1->filterCategory();
     }break;
-    case 5:{
+    case 5: {
         book1->sortBook();
     }break;
     case 6: {
@@ -84,7 +84,7 @@ void performAction(int choice)
         cout << "9";
         break;
     }
-        break;
+          break;
     default:
         cout << "Unknown error has occuered" << endl;
     }

@@ -10,7 +10,7 @@ namespace transaction {
     private:
         int transactionID;
         float totalPrice;
-        Book* boughtBooks=NULL;
+        Book* boughtBooks = NULL;
         Transaction* next;
 
     public:
@@ -29,7 +29,7 @@ namespace transaction {
         void viewCart(Transaction** head);
 
 
-  
+
     };
 }
 #endif

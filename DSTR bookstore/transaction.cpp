@@ -6,6 +6,7 @@
 #include "book.h"
 #include "book.cpp"
 
+
 using namespace std;
 using namespace transaction;
 using namespace book;
@@ -42,13 +43,13 @@ Book* Transaction::getBoughtBooks() {
 
 void Transaction::setBoughtBooks(int id, string name, string category, int quantity, float price) {
     Book* test = new Book;
-    test->push(&this->boughtBooks, id, name,  category,  quantity,  price);
+    test->push(&this->boughtBooks, id, name, category, quantity, price);
 }
 
 
 void Transaction::addTransaction() {
     Transaction* newTrans = new Transaction;
-    bool duplicate = false,exit=true;
+    bool duplicate = false, exit = true;
     int choice;
     //newTrans->setBoughtBooks("Hulu Langat", "Fiction", 4, 4.00);
     //newTrans->setBoughtBooks("Hang Tuah", "Fiction", 5, 5.00);
@@ -103,9 +104,9 @@ void Transaction::addTransaction() {
 
 void Transaction::addtoCart(Transaction** head) {
     // Selecting books
-    int choice,quantity=0, counter = 0;
+    int choice, quantity = 0, counter = 0;
     Book* tempBook = new Book;
-    Book* bookInStock = new Book; 
+    Book* bookInStock = new Book;
     Book* bookInCart = new Book;
     Book* cart = (*head)->getBoughtBooks();
     do {
@@ -114,7 +115,7 @@ void Transaction::addtoCart(Transaction** head) {
             bookInStock->displayRecord(NULL);
             cout << "\n Please select a book by keying in the book ID\n***Enter 1 to exit menu***\n ";
             cin >> choice;
-            while (cin.fail() && choice<0)
+            while (cin.fail() && choice < 0)
             {
                 if (cin.fail())
                 {
@@ -128,7 +129,7 @@ void Transaction::addtoCart(Transaction** head) {
             // If user keys in 1 then user exits edit book menu
             if (choice == 1) { return; }
             // system finds the book based on the id given by user
-            tempBook = bookInStock->searchBook(choice,NULL);
+            tempBook = bookInStock->searchBook(choice, NULL);
             if (tempBook == NULL) {
                 cout << "Book not found! Please enter another Book ID\n";
                 continue;
@@ -145,10 +146,10 @@ void Transaction::addtoCart(Transaction** head) {
                 continue;
             }
             //search for the choosen book  in the transaction cart
-            bookInCart = bookInStock->searchBook(choice,cart);
+            bookInCart = bookInStock->searchBook(choice, cart);
             // If the selected book is not within cart, then add it
             if (bookInCart == NULL) {
-                (*head)->setBoughtBooks(tempBook->getBookID(),tempBook->getName(), tempBook->getCategory(), quantity, tempBook->getPrice());
+                (*head)->setBoughtBooks(tempBook->getBookID(), tempBook->getName(), tempBook->getCategory(), quantity, tempBook->getPrice());
                 return;
             }
             else {
@@ -178,7 +179,7 @@ void Transaction::addtoCart(Transaction** head) {
 
         }
     } while (counter < 2);
-    
+
 
 }
 
@@ -242,7 +243,7 @@ void Transaction::displayRecord() {
         //        << left << setw(15) << ceil(current->getPrice() * 100.0) / 100.0 << endl;
         //    //cout<<current->displayBook(1);
         //    current = current->next;
-        }
+    }
 
-    
+
 }

@@ -57,17 +57,17 @@ float Book::roundoff(float value, unsigned char prec)
 
 string Book::displayBook(int style) {
     switch (style) {
-        case 1: {
-            return to_string(getBookID()) + "\t" + getName() + "\t" + getCategory() + "\t" + to_string(getQuantity()) + "\t" + to_string(getPrice())+ "\n";
-        }break;
+    case 1: {
+        return to_string(getBookID()) + "\t" + getName() + "\t" + getCategory() + "\t" + to_string(getQuantity()) + "\t" + to_string(getPrice()) + "\n";
+    }break;
 
-        case 2: {
-            //return "Book ID   : " + to_string(getBookID()) + "\n" + "Book Name : " + getName() + "\n" + "Category  : " + getCategory() + "\n" + "Quantity  : " + to_string(getQuantity()) + "\n" + "Price     :RM " + to_string(ceil(getPrice() * 100.0) / 100.0) + "\n";
-            return "Book ID   : " + to_string(getBookID()) + "\n" + "Book Name : " + getName() + "\n" + "Category  : " + getCategory() + "\n" + "Quantity  : " + to_string(getQuantity()) + "\n" + "Price     :RM " + to_string(roundoff(getPrice(), 2)) + "\n";
+    case 2: {
+        //return "Book ID   : " + to_string(getBookID()) + "\n" + "Book Name : " + getName() + "\n" + "Category  : " + getCategory() + "\n" + "Quantity  : " + to_string(getQuantity()) + "\n" + "Price     :RM " + to_string(ceil(getPrice() * 100.0) / 100.0) + "\n";
+        return "Book ID   : " + to_string(getBookID()) + "\n" + "Book Name : " + getName() + "\n" + "Category  : " + getCategory() + "\n" + "Quantity  : " + to_string(getQuantity()) + "\n" + "Price     :RM " + to_string(roundoff(getPrice(), 2)) + "\n";
 
-        }break;
-        default:
-            return "Book ID   : " + to_string(getBookID()) + "\n" + "Book Name : " + getName() + "\n" + "Category  : " + getCategory() + "\n" + "Quantity  : " + to_string(getQuantity()) + "\n" + "Price     :RM " + to_string(roundoff(getPrice(), 2)) + "\n";
+    }break;
+    default:
+        return "Book ID   : " + to_string(getBookID()) + "\n" + "Book Name : " + getName() + "\n" + "Category  : " + getCategory() + "\n" + "Quantity  : " + to_string(getQuantity()) + "\n" + "Price     :RM " + to_string(roundoff(getPrice(), 2)) + "\n";
     }
 }
 
@@ -78,7 +78,7 @@ void Book::printCategory() {
     cout << "Please select a category " << endl;
 }
 
-string Book:: convertCategory(int selection) {
+string Book::convertCategory(int selection) {
     std::string category;
     switch (selection) {
     case 1:
@@ -167,7 +167,7 @@ void Book::addBook() {
 
 }
 
-void Book:: displayRecord(Book * head1) {
+void Book::displayRecord(Book* head1) {
     struct Book* current;
     if (head1 == NULL) {
         current = head;
@@ -177,18 +177,19 @@ void Book:: displayRecord(Book * head1) {
     }
     if (current == NULL) {
         cout << "No records found";
-    }else {
-        cout <<left<<setw(15)<< "Book ID" 
-            << left << setw(35) << "Name" 
-            << left << setw(15) << "Category" 
-            << left << setw(15) << "Quantity" 
-            << left << setw(15) << "Price(RM)"<<endl;
+    }
+    else {
+        cout << left << setw(15) << "Book ID"
+            << left << setw(35) << "Name"
+            << left << setw(15) << "Category"
+            << left << setw(15) << "Quantity"
+            << left << setw(15) << "Price(RM)" << endl;
         while (current != NULL) {
-            cout <<left << setw(15) << current->getBookID() 
-                << left << setw(35) << current->getName() 
-                << left << setw(15) << current->getCategory() 
-                << left << setw(15) << current->getQuantity() 
-                << left << setw(15)<< ceil(current->getPrice() * 100.0) / 100.0 << endl;
+            cout << left << setw(15) << current->getBookID()
+                << left << setw(35) << current->getName()
+                << left << setw(15) << current->getCategory()
+                << left << setw(15) << current->getQuantity()
+                << left << setw(15) << ceil(current->getPrice() * 100.0) / 100.0 << endl;
             //cout<<current->displayBook(1);
             current = current->next;
         }
@@ -198,7 +199,7 @@ void Book:: displayRecord(Book * head1) {
 
 bool Book::checkDuplicateID(int id) {
     bool found = false;
-    Book * node = head;
+    Book* node = head;
     if (node == NULL) {
         return false;
     }
@@ -221,7 +222,7 @@ int Book::randomID() {
     return id;
 }
 
-Book* Book::searchBook(int id, Book * head1){
+Book* Book::searchBook(int id, Book* head1) {
     struct Book* current;
     if (head1 == NULL) {
         current = head;
@@ -241,12 +242,12 @@ Book* Book::searchBook(int id, Book * head1){
     current = NULL;
     return current;
 
-    }
+}
 
 void Book::editBook() {
     //display all books
     Book* tempBook = new Book;
-    int choice,update,intVal,counter=0;
+    int choice, update, intVal, counter = 0;
     string stringValue;
     float floatVal;
     do {
@@ -263,8 +264,8 @@ void Book::editBook() {
             // If user keys in 1 then user exits edit book menu
             if (choice == 1) { break; }
             // system finds the book based on the id given by user
-            tempBook = searchBook(choice,head);
-            if (tempBook== NULL) {
+            tempBook = searchBook(choice, head);
+            if (tempBook == NULL) {
                 cout << "Book not found! Please enter another Book ID\n";
                 continue;
             }
@@ -275,7 +276,7 @@ void Book::editBook() {
         }
         if (counter == 1) {
             //System shows book selected by user.
-            cout<<tempBook->displayBook(2);
+            cout << tempBook->displayBook(2);
             cout << "1. Update BookName\n2.Update Category\n3.Update Quantity\n4. Update Price\n5. Exit updating book\n";
             cin >> update;
             if (cin.fail() || update < 1 || update>4) {
@@ -339,7 +340,7 @@ void Book::editBook() {
                 tempBook->setPrice(floatVal);
             }break;
             case 5:
-                counter=69;
+                counter = 69;
                 continue;
                 break;
             default:
@@ -359,8 +360,8 @@ void Book::editBook() {
 
 
 void Book::deleteBook() {
-    push(&head,0, "Hulu Langat", "Fiction", 4,4.00);
-    push(&head,0, "Hang Tuah", "Fiction", 5,5.00);
+    push(&head, 0, "Hulu Langat", "Fiction", 4, 4.00);
+    push(&head, 0, "Hang Tuah", "Fiction", 5, 5.00);
     Book* tempBook = new Book;
     int choice, update, intVal, counter = 0;
     string stringValue;
@@ -381,7 +382,7 @@ void Book::deleteBook() {
             }
             if (choice == 1) { break; }
 
-            tempBook = searchBook(choice,head);
+            tempBook = searchBook(choice, head);
             if (tempBook == NULL) {
                 cout << "Book not found! Please enter another Book ID\n";
                 continue;
@@ -400,7 +401,7 @@ void Book::deleteBook() {
             }
             switch (update) {
             case 1: {
-            //if book==head then make head->next the new head;
+                //if book==head then make head->next the new head;
                 if (tempBook == head) {
                     if (tempBook->next != NULL) {
                         head = head->next;
@@ -410,9 +411,10 @@ void Book::deleteBook() {
                         head = NULL;
                         free(tempBook);
                     }
-                }else {
-                //Assume the book u wanna delete is B, the book previous of it is A and the book after it is C
-                //Now we find A and connect A->next to C. Then we delete B
+                }
+                else {
+                    //Assume the book u wanna delete is B, the book previous of it is A and the book after it is C
+                    //Now we find A and connect A->next to C. Then we delete B
                     Book* prevBook = head;
                     while (prevBook->next != NULL && prevBook->next != tempBook) {
                         prevBook = prevBook->next;
@@ -445,7 +447,7 @@ void Book::deleteBook() {
     } while (counter < 2);
 }
 
-void Book::push(Book** head_ref,int id, string name, string category, int quantity,float price){
+void Book::push(Book** head_ref, int id, string name, string category, int quantity, float price) {
     bool duplicate = false;
     Book* new_node = new Book;
     // if id=0, then let system generates the book ID,else use the manual id provided by user
@@ -471,7 +473,7 @@ void Book::push(Book** head_ref,int id, string name, string category, int quanti
 
 void Book::filterCategory() {
 
-    int counter = 0,choice;
+    int counter = 0, choice;
     string category;
     do {
         if (counter == 0) {
@@ -525,10 +527,10 @@ void Book::filterCategory() {
 
 void Book::sortBook() {
     int counter = 0, choice;
-    push(&head, 0,"Hulu Langat", "Fiction", 4,5.00);
-    push(&head, 0, "Hang Tuah", "Fiction", 5233,7.50433434);
-    push(&head, 0, "Aliff", "Fiction", 23,23.60);
-    push(&head, 0, "Ledong James", "sex", 5,34.22);
+    push(&head, 0, "Hulu Langat", "Fiction", 4, 5.00);
+    push(&head, 0, "Hang Tuah", "Fiction", 5233, 7.50433434);
+    push(&head, 0, "Aliff", "Fiction", 23, 23.60);
+    push(&head, 0, "Ledong James", "sex", 5, 34.22);
     do {
         if (counter == 0) {
             cout << "Please select the sorting method\n1. Ascending Sort by book quantity\n2. Descending Sort by book Quantity\n3.Ascending sort by Book id\n4. Descending sort by Book id\n";
@@ -548,24 +550,24 @@ void Book::sortBook() {
         }
         if (counter == 1) {
             switch (choice) {
-                case 1:
-                    MergeSort(&head,1);
-                    displayRecord(head);
-                    break;
-                case 2:
-                    MergeSort(&head, 2);
-                    displayRecord(head);
-                    break;
-                case 3:
-                    MergeSort(&head, 3);
-                    displayRecord(head);
-                    break;
-                case 4:
-                    MergeSort(&head, 4);
-                    displayRecord(head);
-                    break;
-                default:
-                    displayRecord(head);
+            case 1:
+                MergeSort(&head, 1);
+                displayRecord(head);
+                break;
+            case 2:
+                MergeSort(&head, 2);
+                displayRecord(head);
+                break;
+            case 3:
+                MergeSort(&head, 3);
+                displayRecord(head);
+                break;
+            case 4:
+                MergeSort(&head, 4);
+                displayRecord(head);
+                break;
+            default:
+                displayRecord(head);
             }
             cout << "Do you wish to sort by another method?\n1.Yes\n2.No\n";
             cin >> choice;
@@ -581,7 +583,7 @@ void Book::sortBook() {
 
 }
 // 1 for ascending sorting quantity, 2 for descending sorting quantity, 3 for ascending sorting book ID, 4 for descending sorting book ID
-void Book::MergeSort(Book** headRef,int choice)
+void Book::MergeSort(Book** headRef, int choice)
 {
 
     Book* head1 = *headRef;
@@ -600,13 +602,13 @@ void Book::MergeSort(Book** headRef,int choice)
         // ascending sort by quantity
         MergeSort(&a, 1);
         MergeSort(&b, 1);
-        *headRef = SortedMerge(a, b,1);
+        *headRef = SortedMerge(a, b, 1);
     }
-    else if(choice==2) {
+    else if (choice == 2) {
         //descending sort by quantity
         MergeSort(&a, 2);
         MergeSort(&b, 2);
-        *headRef = RevSortedMerge(a, b,1);
+        *headRef = RevSortedMerge(a, b, 1);
     }
     else if (choice == 3) {
         //ascending sort by bookID
@@ -658,7 +660,7 @@ Book* Book::SortedMerge(Book* a, Book* b, int choice)
     return (result);
 }
 
-Book* Book::RevSortedMerge(Book* a, Book* b,int choice)
+Book* Book::RevSortedMerge(Book* a, Book* b, int choice)
 {
     Book* result = NULL;
 
@@ -720,10 +722,3 @@ void Book::FrontBackSplit(Book* source,
     *backRef = slow->next;
     slow->next = NULL;
 }
-
-
-
-
-
-
-
