@@ -16,7 +16,7 @@ namespace book {
         void printCategory();
         std::string convertCategory(int);
         void addBook();
-        void displayRecord();
+        void displayRecord(Book* head1);
         bool checkDuplicateID(int id);
         int randomID();
         int getBookID();
@@ -31,9 +31,9 @@ namespace book {
         void setPrice(float price);
         std::string displayBook(int style);
         void editBook();
-        Book* searchBook(int id);
+        Book* searchBook(int id, Book * head1);
         void deleteBook();
-        void push(Book** head_ref, std::string name, std::string category, int quantity,float price);
+        void push(Book** head_ref, int id,std::string name, std::string category, int quantity,float price);
         void filterCategory();
         void MergeSort(Book** headRef, int choice);
         Book* SortedMerge(Book* a, Book* b, int choice);

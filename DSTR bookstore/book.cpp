@@ -167,9 +167,14 @@ void Book::addBook() {
 
 }
 
-void Book:: displayRecord() {
+void Book:: displayRecord(Book * head1) {
     struct Book* current;
-    current = head;
+    if (head1 == NULL) {
+        current = head;
+    }
+    else {
+        current = head1;
+    }
     if (current == NULL) {
         cout << "No records found";
     }else {
@@ -216,9 +221,14 @@ int Book::randomID() {
     return id;
 }
 
-Book* Book::searchBook(int id) {
+Book* Book::searchBook(int id, Book * head1){
     struct Book* current;
-    current = head;
+    if (head1 == NULL) {
+        current = head;
+    }
+    else {
+        current = head1;
+    }
     if (current == NULL) {
         return current;
     }
@@ -241,7 +251,7 @@ void Book::editBook() {
     float floatVal;
     do {
         if (counter == 0) {
-            Book::displayRecord();
+            Book::displayRecord(head);
             cout << "\n Please select a book by keying in the book ID\n***Enter 1 to exit menu***\n ";
             cin >> choice;
             if (cin.fail())
@@ -253,7 +263,7 @@ void Book::editBook() {
             // If user keys in 1 then user exits edit book menu
             if (choice == 1) { break; }
             // system finds the book based on the id given by user
-            tempBook = searchBook(choice);
+            tempBook = searchBook(choice,head);
             if (tempBook== NULL) {
                 cout << "Book not found! Please enter another Book ID\n";
                 continue;
@@ -349,8 +359,8 @@ void Book::editBook() {
 
 
 void Book::deleteBook() {
-    push(&head, "Hulu Langat", "Fiction", 4,4.00);
-    push(&head, "Hang Tuah", "Fiction", 5,5.00);
+    push(&head,0, "Hulu Langat", "Fiction", 4,4.00);
+    push(&head,0, "Hang Tuah", "Fiction", 5,5.00);
     Book* tempBook = new Book;
     int choice, update, intVal, counter = 0;
     string stringValue;
@@ -360,7 +370,7 @@ void Book::deleteBook() {
     }
     do {
         if (counter == 0) {
-            Book::displayRecord();
+            Book::displayRecord(head);
             cout << "\n Please select a book by keying in the book ID\n***Enter 1 to exit menu***\n ";
             cin >> choice;
             if (cin.fail())
@@ -371,7 +381,7 @@ void Book::deleteBook() {
             }
             if (choice == 1) { break; }
 
-            tempBook = searchBook(choice);
+            tempBook = searchBook(choice,head);
             if (tempBook == NULL) {
                 cout << "Book not found! Please enter another Book ID\n";
                 continue;
@@ -435,17 +445,22 @@ void Book::deleteBook() {
     } while (counter < 2);
 }
 
-void Book::push(Book** head_ref, string name, string category, int quantity,float price){
+void Book::push(Book** head_ref,int id, string name, string category, int quantity,float price){
     bool duplicate = false;
     Book* new_node = new Book;
-    do {
+    // if id=0, then let system generates the book ID,else use the manual id provided by user
+    if (id == 0) {
+        do {
 
-        new_node->setBookID(randomID());
-        if (new_node->getBookID() == 1) { continue; }
-        duplicate = checkDuplicateID(new_node->getBookID());
+            new_node->setBookID(randomID());
+            if (new_node->getBookID() == 1) { continue; }
+            duplicate = checkDuplicateID(new_node->getBookID());
 
-    } while (duplicate);
-
+        } while (duplicate);
+    }
+    else {
+        new_node->setBookID(id);
+    }
     new_node->setName(name);
     new_node->setCategory(category);
     new_node->setQuantity(quantity);
@@ -510,10 +525,10 @@ void Book::filterCategory() {
 
 void Book::sortBook() {
     int counter = 0, choice;
-    push(&head, "Hulu Langat", "Fiction", 4,5.00);
-    push(&head, "Hang Tuah", "Fiction", 5233,7.50433434);
-    push(&head, "Aliff", "Fiction", 23,23.60);
-    push(&head, "Ledong James", "sex", 5,34.22);
+    push(&head, 0,"Hulu Langat", "Fiction", 4,5.00);
+    push(&head, 0, "Hang Tuah", "Fiction", 5233,7.50433434);
+    push(&head, 0, "Aliff", "Fiction", 23,23.60);
+    push(&head, 0, "Ledong James", "sex", 5,34.22);
     do {
         if (counter == 0) {
             cout << "Please select the sorting method\n1. Ascending Sort by book quantity\n2. Descending Sort by book Quantity\n3.Ascending sort by Book id\n4. Descending sort by Book id\n";
@@ -535,22 +550,22 @@ void Book::sortBook() {
             switch (choice) {
                 case 1:
                     MergeSort(&head,1);
-                    displayRecord();
+                    displayRecord(head);
                     break;
                 case 2:
                     MergeSort(&head, 2);
-                    displayRecord();
+                    displayRecord(head);
                     break;
                 case 3:
                     MergeSort(&head, 3);
-                    displayRecord();
+                    displayRecord(head);
                     break;
                 case 4:
                     MergeSort(&head, 4);
-                    displayRecord();
+                    displayRecord(head);
                     break;
                 default:
-                    displayRecord();
+                    displayRecord(head);
             }
             cout << "Do you wish to sort by another method?\n1.Yes\n2.No\n";
             cin >> choice;
