@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "transaction.h"
 #include "book.h"
+#include "book.cpp"
 
 using namespace std;
 using namespace transaction;
@@ -37,12 +38,12 @@ void Transaction::addTransaction() {
     string name;
     bool duplicate = false;
     float price;
-    struct Book* newBook = new Book;
+    struct Transaction* newTransaction = new Transaction;
     // Auto generate unique bookID. 1 is not allowed to be used as the bookID because 1 is special command to exit menu
     do {
-        newBook->setBookID(Book.randomID());
-        if (newBook->getBookID() == 1) { continue; }
-        duplicate = checkDuplicateID(newBook->getBookID());
+        newTransaction->setTransactionID(randomID());
+        if (newTransaction->getTransactionID() == 1) { continue; }
+        duplicate = checkDuplicateID(newTransaction->getTransactionID());
     } while (duplicate);
 
     //Name
@@ -50,24 +51,24 @@ void Transaction::addTransaction() {
     //cin >> name;
     getline(cin, name);
     getline(cin, name);
-    newBook->setName(name);
+    //newTransaction->setTransaction(name);
 
     // Category
-    Book::printCategory();
-    cin >> category;
-    while (category < 0 || category>3 || cin.fail())
-    {
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore();
-        }
-        cout << "Invalid input\n";
-        cout << "Please choose the category from the range of 1-3 \n";
-        cin >> category;
-    }
-    name = convertCategory(category);
-    newBook->setCategory(name);
+    //Transaction::printCategory();
+    //cin >> category;
+    //while (category < 0 || category>3 || cin.fail())
+    //{
+        //if (cin.fail())
+        //{
+            //cin.clear();
+            //cin.ignore();
+        //}
+        //cout << "Invalid input\n";
+        //cout << "Please choose the category from the range of 1-3 \n";
+        //cin >> category;
+    //}
+    //name = convertCategory(category);
+    //newBook->setCategory(name);
 
     //Quantity
     cout << "Please enter new quantity" << endl;
@@ -82,37 +83,38 @@ void Transaction::addTransaction() {
         cout << "Please enter a positive number\n";
         cin >> quantity;
     }
-    newBook->setQuantity(quantity);
-    //Price
-    cout << "Please enter a price" << endl;
-    cin >> price;
-    while (price < 0 || cin.fail())
-    {
-        if (cin.fail())
-        {
-            cin.clear();
-            cin.ignore();
-        }
-        cout << "Please enter a positive value\n";
-        cin >> price;
-    }
-    newBook->setPrice(price);
+    newTransaction->setQuantity(quantity);
 
-    newBook->next = head;
-    head = newBook;
+    //Price
+    //cout << "Please enter a price" << endl;
+    //cin >> price;
+    //while (price < 0 || cin.fail())
+    //{
+        //if (cin.fail())
+        //{
+            //cin.clear();
+            //cin.ignore();
+        //}
+        //cout << "Please enter a positive value\n";
+        //cin >> price;
+    //}
+    //newBook->setPrice(price);
+
+    //newBook->next = head;
+    //head = newBook;
 
 }
 
 
-bool Book::checkDuplicateID(int id) {
+bool Transaction::checkDuplicateID(int id) {
     bool found = false;
-    Book* node = head;
+    Transaction* node = head;
     if (node == NULL) {
         return false;
     }
     else {
         do {
-            if (node->getBookID() == id) {
+            if (node->getTransactionID() == id) {
                 cout << "DUPLICATE ID FOUND !" << endl;
                 return true;
             }
