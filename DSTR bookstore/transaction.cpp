@@ -10,6 +10,7 @@ using namespace std;
 using namespace transaction;
 using namespace book;
 
+
 Transaction* head = NULL;
 Book* showBook = new Book;
 
@@ -89,12 +90,9 @@ void Transaction::addTransaction() {
     }
 
 
+
     newTrans->next = head;
     head = newTrans;
-
-
-
-
 
     //newBook->next = head;
     //head = newBook;
@@ -174,6 +172,10 @@ void Transaction::addtoCart(Transaction** head) {
                 counter++;
             }
 
+
+            return;
+
+
             return;
 
         }
@@ -215,6 +217,7 @@ int Transaction::randomID() {
 void Transaction::displayRecord() {
     struct Transaction* current;
     current = head;
+
     if (current == NULL) {
         cout << "No records found";
     }
@@ -246,3 +249,4 @@ void Transaction::displayRecord() {
 
     
 }
+
