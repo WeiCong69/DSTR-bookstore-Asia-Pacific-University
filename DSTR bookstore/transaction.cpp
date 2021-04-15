@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "transaction.h"
 #include "book.h"
+#include "book.cpp"
 
 using namespace std;
 using namespace transaction;
