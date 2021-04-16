@@ -44,6 +44,7 @@ void Transaction::setBoughtBooks(int id, string name, string category, int quant
 void Transaction::resetBoughtBooks() {
     this->boughtBooks = NULL;
     //this->boughtBooks->next = NULL;
+    //this->boughtBooks->next = NULL;
 }
 
 
@@ -53,8 +54,8 @@ void Transaction::addTransaction() {
     viewCart(&newTrans);
     bool duplicate = false,exit=true;
     int choice;
-    newTrans->setBoughtBooks(67,"Hulu Langat", "Fiction", 4, 4.00);
-    newTrans->setBoughtBooks(34,"Hang Tuah", "Fiction", 5, 5.00);
+    //newTrans->setBoughtBooks(67,"Hulu Langat", "Fiction", 4, 4.00);
+    //newTrans->setBoughtBooks(34,"Hang Tuah", "Fiction", 5, 5.00);
     //Transaction ID
     do {
         newTrans->setTransactionID(randomID());
@@ -79,12 +80,15 @@ void Transaction::addTransaction() {
 
         switch (choice) {
         case 1:
+            //Add books to cart
             addtoCart(&newTrans);
             break;
         case 2:
+            //Delete books from cart
             removeFromCart(&newTrans);
             break;
         case 3:
+            //check books in the cart
             viewCart(&newTrans);
             break;
         case 4: {
@@ -215,9 +219,9 @@ void Transaction::removeFromCart(Transaction** head) {
     Book* tempBook = new Book;
     Book* bookInStock = new Book;
     Book* bookInCart = new Book;
-    Book* cart = (*head)->getBoughtBooks();
     do {
-        if (counter == 0) {
+        Book* cart = (*head)->getBoughtBooks();
+        if (counter == 0) {           
             if (cart == NULL) {
                 cout << "No records found\n";
                 break;
@@ -264,21 +268,23 @@ void Transaction::removeFromCart(Transaction** head) {
             }
             switch (quantity) {
             case 1: {
-                //if book==head then make head->next the new head;
+                //(*head)->resetBoughtBooks();
+                ////if book==head then make head->next the new head;
                 if (tempBook == cart) {
                     if (tempBook->next != NULL) {
-                        cart = cart->next;
-                        cout << "1\n";
-                        free(tempBook);
+                        (*head)->boughtBooks = (*head)->boughtBooks->next;
+                        //cart = cart->next;
+                        //cout << "1\n";
+                        //free(tempBook);
                     }
                     else {
                         (*head)->resetBoughtBooks();
-                        cout << "2\n";
-                        free(tempBook);
+                        //cout << "2\n";
+                        //free(tempBook);
                     }
                 }
                 else {
-                    cout << "3\n";
+                    //cout << "3\n";
                     //Assume the book u wanna delete is B, the book previous of it is A and the book after it is C
                     //Now we find A and connect A->next to C. Then we delete B
                     Book* prevBook = cart;
@@ -289,7 +295,7 @@ void Transaction::removeFromCart(Transaction** head) {
                         cout << "\nGiven node is not present in Linked List";
                     }
                     prevBook->next = prevBook->next->next;
-                    free(tempBook);
+                    //free(tempBook);
                 }
 
 
@@ -327,6 +333,7 @@ void Transaction::viewCart(Transaction** transactionHead) {
         cout << "No records found"<<endl;
     }
     else {
+        
         cart->displayRecord(cart);
     }
     
@@ -337,6 +344,7 @@ float Transaction::calculateTotal(Transaction** head) {
     float total=0;
     if (cart == NULL)return total;
     while (cart != NULL) {
+        //get the price of the book by multiplying the price with quantity
         total += cart->getQuantity() * cart->getPrice();
         cart = cart->next;
     }
@@ -369,37 +377,282 @@ int Transaction::randomID() {
 }
 
 void Transaction::displayRecord() {
+
     struct Transaction* current;
+    Transaction *choosenTrans =new Transaction;
     current = transactionHead;
+    int choice,counter = 0;
 
     if (current == NULL) {
         cout << "No records found";
+        return;
+    }
+    do {
+        if (counter == 0) {
+            cout << left << setw(15) << "Transaction ID"
+                << left << setw(35) << "Total Price (RM)" << endl;
+            while (current != NULL) {
+                cout << left << setw(15) << current->getTransactionID()
+                    << left << setw(35) << ceil(current->getTotalPrice() * 100.0) / 100.0 << endl;
+                Book* bought = current->getBoughtBooks();
+                //while (bought != NULL) {
+                //    cout << current->getTransactionID() << endl;
+                //    cout << bought->displayBook(2);
+                //    bought = bought->next;
+                //}
+                current = current->next;
+            }
+            cout << "\n Please check transaction details by keying in the transaction ID\n***Enter 1 to exit menu***\n ";
+            cin >> choice;
+            while (cin.fail() && choice < 0)
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore();
+                }
+                cout << "Invalid input\n";
+                cout << "Please key in the transaction ID\n";
+                cin >> choice;
+            }
+            if (choice == 1) { return; }
+            // system finds the book based on the id given by user
+            choosenTrans = choosenTrans->searchTransaction(choice, transactionHead);
+            if (choosenTrans == NULL) {
+                cout << "Book not found! Please enter another Book ID\n";
+                continue;
+            }
+            counter++;
+        }
+        if (counter == 1) {
+            showBook->displayRecord(choosenTrans->getBoughtBooks());
+            cout << "Do you check another transaction?\n1.Yes\n2. No\n";
+            cin >> choice;
+            if (choice == 1) {
+                counter--;
+                continue;
+            }
+            else {
+                counter++;
+            }
+        }
+    } while (counter < 2);
+
+
+    
+
+}
+
+Transaction* Transaction::searchTransaction(int id, Transaction* head1) {
+    struct Transaction* current;
+    current = head1;
+    if (current == NULL) {
+        return current;
+    }
+    while (current != NULL) {
+        if (current->getTransactionID() == id) {
+            return current;
+        }
+        current = current->next;
+    }
+    current = NULL;
+    return current;
+
+}
+
+void Transaction::sortTransaction() {
+    int counter = 0, choice;
+
+    do {
+        if (counter == 0) {
+            cout << "Please select the sorting method\n1. Ascending Sort by Total Price\n2. Descending Sort by Total Price\n3.Ascending sort by Transaction id\n4. Descending sort by Transaction id\n";
+            cin >> choice;
+            while (choice < 0 || choice>4 || cin.fail())
+            {
+                if (cin.fail())
+                {
+                    cin.clear();
+                    cin.ignore();
+                }
+                cout << "Invalid input\n";
+                cout << "Please choose the category from the range of 1-4\n ";
+                cin >> choice;
+            }
+            counter++;
+        }
+        if (counter == 1) {
+            switch (choice) {
+
+            case 1:
+                MergeSort(&transactionHead, 1);
+                displayRecord();
+                break;
+            case 2:
+                MergeSort(&transactionHead, 2);
+                displayRecord();
+                break;
+            case 3:
+                MergeSort(&transactionHead, 3);
+                displayRecord();
+                break;
+            case 4:
+                MergeSort(&transactionHead, 4);
+                displayRecord();
+                break;
+            default:
+                displayRecord();
+
+            }
+            cout << "Do you wish to sort by another method?\n1.Yes\n2.No\n";
+            cin >> choice;
+            if (choice == 1) {
+                counter--;
+            }
+            else {
+                counter++;
+                break;
+            }
+        }
+    } while (counter < 2);
+
+}
+// 1 for ascending sorting quantity, 2 for descending sorting quantity, 3 for ascending sorting book ID, 4 for descending sorting book ID
+void Transaction::MergeSort(Transaction** headRef, int choice)
+{
+
+    Transaction* head1 = *headRef;
+    Transaction* a;
+    Transaction* b;
+
+    /* Base case -- length 0 or 1 */
+    if ((head1 == NULL) || (head1->next == NULL)) {
+        return;
+    }
+
+    /* Split head into 'a' and 'b' sublists */
+    FrontBackSplit(head1, &a, &b);
+
+    if (choice == 1) {
+        // ascending sort by quantity
+        MergeSort(&a, 1);
+        MergeSort(&b, 1);
+        *headRef = SortedMerge(a, b, 1);
+    }
+    else if (choice == 2) {
+        //descending sort by quantity
+        MergeSort(&a, 2);
+        MergeSort(&b, 2);
+        *headRef = RevSortedMerge(a, b, 1);
+    }
+    else if (choice == 3) {
+        //ascending sort by bookID
+        MergeSort(&a, 1);
+        MergeSort(&b, 1);
+        *headRef = SortedMerge(a, b, 2);
     }
     else {
-        while (current != NULL) {
-            Book* bought = current->getBoughtBooks();
-            while (bought != NULL) {
-                cout << current->getTransactionID() << endl;
-                cout << bought->displayBook(2);
-                bought = bought->next;
-            }
-            current = current->next;
-        }
+        //descending sort by bookID
+        MergeSort(&a, 2);
+        MergeSort(&b, 2);
+        *headRef = RevSortedMerge(a, b, 2);
+    }
+}
 
-        //cout << left << setw(15) << "Book ID"
-        //    << left << setw(35) << "Name"
-        //    << left << setw(15) << "Category"
-        //    << left << setw(15) << "Quantity"
-        //    << left << setw(15) << "Price(RM)" << endl;
-        //while (current != NULL) {
-        //    cout << left << setw(15) << current->getBookID()
-        //        << left << setw(35) << current->getName()
-        //        << left << setw(15) << current->getCategory()
-        //        << left << setw(15) << current->getQuantity()
-        //        << left << setw(15) << ceil(current->getPrice() * 100.0) / 100.0 << endl;
-        //    //cout<<current->displayBook(1);
-        //    current = current->next;
+// 1 for book quantity, 2 for book ID
+Transaction* Transaction::SortedMerge(Transaction* a, Transaction* b, int choice)
+{
+    Transaction* result = NULL;
+
+    /* Base cases */
+    if (a == NULL)
+        return (b);
+    else if (b == NULL)
+        return (a);
+
+    /* Pick either a or b, and recur */
+    if (choice == 1) {
+        if (a->getTotalPrice() <= b->getTotalPrice()) {
+            result = a;
+            result->next = SortedMerge(a->next, b, 1);
+        }
+        else {
+            result = b;
+            result->next = SortedMerge(a, b->next, 1);
+        }
+    }
+    else {
+        if (a->getTransactionID() <= b->getTransactionID()) {
+            result = a;
+            result->next = SortedMerge(a->next, b, 2);
+        }
+        else {
+            result = b;
+            result->next = SortedMerge(a, b->next, 2);
+        }
     }
 
+    return (result);
+}
 
+Transaction* Transaction::RevSortedMerge(Transaction* a, Transaction* b, int choice)
+{
+    Transaction* result = NULL;
+
+    /* Base cases */
+    if (a == NULL)
+        return (b);
+    else if (b == NULL)
+        return (a);
+
+    /* Pick either a or b, and recur */
+    if (choice == 1) {
+        if (a->getTotalPrice() >= b->getTotalPrice()) {
+            result = a;
+            result->next = RevSortedMerge(a->next, b, 1);
+        }
+        else {
+            result = b;
+            result->next = RevSortedMerge(a, b->next, 1);
+        }
+    }
+    else {
+        if (a->getTransactionID() >= b->getTransactionID()) {
+            result = a;
+            result->next = RevSortedMerge(a->next, b, 2);
+        }
+        else {
+            result = b;
+            result->next = RevSortedMerge(a, b->next, 2);
+        }
+    }
+    return (result);
+}
+
+/* UTILITY FUNCTIONS */
+/* Split the Books of the given list into front and back halves,
+    and return the two lists using the reference parameters.
+    If the length is odd, the extra node should go in the front list.
+    Uses the fast/slow pointer strategy. */
+void Transaction::FrontBackSplit(Transaction* source,
+    Transaction** frontRef, Transaction** backRef)
+{
+    Transaction* fast;
+    Transaction* slow;
+    slow = source;
+    fast = source->next;
+
+    /* Advance 'fast' two Books, and advance 'slow' one Book */
+    while (fast != NULL) {
+        fast = fast->next;
+        if (fast != NULL) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+    }
+
+    /* 'slow' is before the midpoint in the list, so split it in two
+    at that point. */
+    *frontRef = source;
+    *backRef = slow->next;
+    slow->next = NULL;
 }

@@ -29,10 +29,13 @@ namespace transaction {
         void removeFromCart(Transaction** head);
         void viewCart(Transaction** head);
         float calculateTotal(Transaction** head);
-
-
-
-
+        Transaction* searchTransaction(int id, Transaction* head1);
+        void sortTransaction();
+        void MergeSort(Transaction** headRef, int choice);
+        Transaction* SortedMerge(Transaction* a, Transaction* b, int choice);
+        Transaction* RevSortedMerge(Transaction* a, Transaction* b, int choice);
+        void FrontBackSplit(Transaction* source,
+            Transaction** frontRef, Transaction** backRef);
     };
 }
 #endif

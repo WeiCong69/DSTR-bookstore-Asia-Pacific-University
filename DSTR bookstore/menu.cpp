@@ -80,6 +80,9 @@ void performAction(int choice)
     case 7: {
         transaction1->displayRecord();
     }break;
+    case 8: {
+        transaction1->sortTransaction();
+    }break;
     case 9: {
         cout << "9";
         break;
