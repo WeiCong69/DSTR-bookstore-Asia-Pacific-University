@@ -429,6 +429,7 @@ void Transaction::displayRecord() {
             cout << "Do you check another transaction?\n1.Yes\n2. No\n";
             cin >> choice;
             if (choice == 1) {
+                current = transactionHead;
                 counter--;
                 continue;
             }

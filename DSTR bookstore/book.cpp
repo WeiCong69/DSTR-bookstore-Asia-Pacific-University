@@ -538,9 +538,9 @@ void Book::sortBook() {
     push(&bookHead, 0, "Ledong James", "sex", 5,34.22);
     do {
         if (counter == 0) {
-            cout << "Please select the sorting method\n1. Ascending Sort by book quantity\n2. Descending Sort by book Quantity\n3.Ascending sort by Book id\n4. Descending sort by Book id\n";
+            cout << "Please select the sorting method\n1. Ascending Sort by book quantity\n2. Descending Sort by book Quantity\n3.Ascending sort by Book id\n4. Descending sort by Book id\n5.Ascending Sort by book prices\n6.Descending Sort by book prices\n";
             cin >> choice;
-            while (choice < 0 || choice>4 || cin.fail())
+            while (choice < 0 || choice>6 || cin.fail())
             {
                 if (cin.fail())
                 {
@@ -548,7 +548,7 @@ void Book::sortBook() {
                     cin.ignore();
                 }
                 cout << "Invalid input\n";
-                cout << "Please choose the category from the range of 1-4\n ";
+                cout << "Please choose the category from the range of 1-6\n ";
                 cin >> choice;
             }
             counter++;
@@ -570,6 +570,14 @@ void Book::sortBook() {
                     break;
                 case 4:
                     MergeSort(&bookHead, 4);
+                    displayRecord(bookHead);
+                    break;
+                case 5:
+                    MergeSort(&bookHead, 5);
+                    displayRecord(bookHead);
+                    break;
+                case 6:
+                    MergeSort(&bookHead, 6);
                     displayRecord(bookHead);
                     break;
                 default:
@@ -619,15 +627,27 @@ void Book::MergeSort(Book** headRef, int choice)
     }
     else if (choice == 3) {
         //ascending sort by bookID
-        MergeSort(&a, 1);
-        MergeSort(&b, 1);
+        MergeSort(&a, 3);
+        MergeSort(&b, 3);
         *headRef = SortedMerge(a, b, 2);
     }
-    else {
+    else if (choice == 4) {
         //descending sort by bookID
-        MergeSort(&a, 2);
-        MergeSort(&b, 2);
+        MergeSort(&a, 4);
+        MergeSort(&b, 4);
         *headRef = RevSortedMerge(a, b, 2);
+    }
+    else if (choice == 5) {
+        //ascending sort by bookID
+        MergeSort(&a, 5);
+        MergeSort(&b, 5);
+        *headRef = SortedMerge(a, b, 3);
+    }
+    else if (choice == 6) {
+        //descending sort by bookID
+        MergeSort(&a, 6);
+        MergeSort(&b, 6);
+        *headRef = RevSortedMerge(a, b, 3);
     }
 }
 
@@ -653,7 +673,7 @@ Book* Book::SortedMerge(Book* a, Book* b, int choice)
             result->next = SortedMerge(a, b->next, 1);
         }
     }
-    else {
+    else if (choice == 2) {
         if (a->getBookID() <= b->getBookID()) {
             result = a;
             result->next = SortedMerge(a->next, b, 2);
@@ -661,6 +681,16 @@ Book* Book::SortedMerge(Book* a, Book* b, int choice)
         else {
             result = b;
             result->next = SortedMerge(a, b->next, 2);
+        }
+    }
+    else if (choice == 3) {
+        if (a->getPrice() <= b->getPrice()) {
+            result = a;
+            result->next = SortedMerge(a->next, b, 3);
+        }
+        else {
+            result = b;
+            result->next = SortedMerge(a, b->next, 3);
         }
     }
 
@@ -688,7 +718,7 @@ Book* Book::RevSortedMerge(Book* a, Book* b, int choice)
             result->next = RevSortedMerge(a, b->next, 1);
         }
     }
-    else {
+    else if (choice == 2) {
         if (a->getBookID() >= b->getBookID()) {
             result = a;
             result->next = RevSortedMerge(a->next, b, 2);
@@ -696,6 +726,16 @@ Book* Book::RevSortedMerge(Book* a, Book* b, int choice)
         else {
             result = b;
             result->next = RevSortedMerge(a, b->next, 2);
+        }
+    }
+    else if (choice == 3) {
+        if (a->getPrice() >= b->getPrice()) {
+            result = a;
+            result->next = RevSortedMerge(a->next, b, 3);
+        }
+        else {
+            result = b;
+            result->next = RevSortedMerge(a, b->next, 3);
         }
     }
     return (result);
