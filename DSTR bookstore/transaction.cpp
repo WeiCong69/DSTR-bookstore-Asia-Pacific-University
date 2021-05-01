@@ -419,7 +419,8 @@ void Transaction::displayRecord() {
             // system finds the book based on the id given by user
             choosenTrans = choosenTrans->searchTransaction(choice, transactionHead);
             if (choosenTrans == NULL) {
-                cout << "Book not found! Please enter another Book ID\n";
+                cout << "Transaction not found! Please enter another Transaction ID\n";
+                current = transactionHead;
                 continue;
             }
             counter++;
